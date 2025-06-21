@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Birthday Check</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #b2fefa, #0ed2f7);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 1rem;
+      color: #004d40;
+      text-align: center;
+    }
+    form {
+      background: rgba(255,255,255,0.9);
+      padding: 2rem;
+      border-radius: 20px;
+      max-width: 320px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    input[type="date"], button {
+      width: 100%;
+      font-size: 1.2rem;
+      padding: 0.7rem;
+      margin: 1rem 0;
+      border-radius: 10px;
+      border: 2px solid #004d40;
+    }
+    .gender-group {
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-around;
+    }
+    .gender-group label {
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    input[type="radio"] {
+      margin-right: 0.4rem;
+      cursor: pointer;
+    }
+    .error-message {
+      color: red;
+      min-height: 1.5em;
+      margin-top: 0.5rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Enter your birthday & gender</h1>
+
+  <form id="birthdayForm" novalidate>
+    <input type="date" id="birthdayInput" required />
+
+    <div class="gender-group">
+      <label><input type="radio" name="gender" value="male" required /> Male</label>
+      <label><input type="radio" name="gender" value="female" /> Female</label>
+      <label><input type="radio" name="gender" value="other" /> Other</label>
+    </div>
+
+    <button type="submit">Check 🎉</button>
+
+    <div class="error-message" id="errorMsg"></div>
+  </form>
+
+  <script>
+    const friendBirthday = '06-24'; // change to your friend's birthday (MM-DD)
+
+    const form = document.getElementById('birthdayForm');
+    const birthdayInput = document.getElementById('birthdayInput');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      errorMsg.textContent = '';
+
+      // Validate birthday input
+      if (!birthdayInput.value) {
+        errorMsg.textContent = "Please select your birthday date!";
+        return;
+      }
+
+      // Validate gender selection
+      const gender = form.gender.value;
+      if (!gender) {
+        errorMsg.textContent = "Please select your gender!";
+        return;
+      }
+
+      // Parse date
+      const inputDate = new Date(birthdayInput.value);
+      if (isNaN(inputDate.getTime())) {
+        errorMsg.textContent = "Invalid date!";
+        return;
+      }
+
+      // Format MM-DD string
+      const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+      const day = String(inputDate.getDate()).padStart(2, '0');
+      const inputMMDD = `${month}-${day}`;
+
+      if (inputMMDD === friendBirthday) {
+        // Redirect to greeting page with gender param
+        window.location.href = `birthday-greet.html?gender=${gender}`;
+      } else {
+        // Redirect to no-birthday page
+        window.location.href = 'no-bday.html';
+      }
+    });
+  </script>
+
+</body>
+</html>
